@@ -1,0 +1,22 @@
+
+launch:
+  - group:
+    - push-ros-namespace:
+        namespace: "/vesc"
+    - include:
+        file: "$(find-pkg-share vesc_driver)/launch/vesc_driver_node.launch.py"
+        arg:
+          - name: duty_cycle_max
+            value: 0.9
+
+  - node:
+    pkg: "key_teleop"
+    exec: "key_teleop"
+    name: "key_teleop"
+
+  - node:
+    pkg: "topic_tools"
+    exec: "transform"
+    name: "forward"
+    args: ""
+
