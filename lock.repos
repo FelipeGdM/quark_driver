@@ -1,0 +1,29 @@
+repositories:
+  ackermann_msgs:
+    type: git
+    url: https://github.com/ros-drivers/ackermann_msgs.git
+    version: f61ddd8978bc1604b8beab958bb057ed344225d0
+  ds4_driver:
+    type: git
+    url: https://github.com/naoki-mizuno/ds4_driver.git
+    version: b45161460b63ad84b605d2152ee897e72f5b5754
+  teleop_tools:
+    type: git
+    url: https://github.com/ros-teleop/teleop_tools.git
+    version: d6fd09179347dabb82edcafb04444fb2581c544e
+  topic_tools:
+    type: git
+    url: https://github.com/ros-tooling/topic_tools.git
+    version: fcbed4037a7a59871f8d05c93aed0d8eb198339f
+  transport_drivers:
+    type: git
+    url: https://github.com/ros-drivers/transport_drivers.git
+    version: 1.2.0
+  udp_msgs:
+    type: git
+    url: https://github.com/flynneva/udp_msgs.git
+    version: 0.0.3
+  vesc:
+    type: git
+    url: https://github.com/f1tenth/vesc.git
+    version: 82079432d40e8017038c6165ab94ca7d7053bc88
