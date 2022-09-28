@@ -22,7 +22,7 @@ launch:
       namespace: "vesc"
       respawn: "True"
       param: 
-        - from: "$(find-pkg-share vesc_driver)/params/vesc_config.yaml"
+        - from: "$(find-pkg-share motors_bringup)/params/vesc_config.yaml"
 
   - node:
       pkg: "topic_tools"
