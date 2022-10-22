@@ -1,0 +1,6 @@
+launch:
+  - node:
+      pkg: "cone_detection"
+      exec: "camera_sub"
+      name: "camera_sub"
+      # namespace: "yolo"

@@ -24,8 +24,7 @@ int main(int argc, char * argv[])
 
   rclcpp::Rate rate(60);
   Mat image;
-  VideoCapture cap(0);
-  namedWindow("Webcam");
+  VideoCapture cap(2);
   cout << "Initializing" << endl;
 
   if(!cap.isOpened()){
