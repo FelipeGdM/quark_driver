@@ -2,7 +2,7 @@ from setuptools import setup
 from glob import glob
 import os
 
-package_name = 'cone_detection'
+package_name = 'cone_detection_python'
 
 setup(
     name=package_name,
