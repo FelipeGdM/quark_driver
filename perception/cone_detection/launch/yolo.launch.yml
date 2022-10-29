@@ -4,3 +4,4 @@ launch:
       exec: "camera_sub"
       name: "camera_sub"
       # namespace: "yolo"
+      output: "screen"
