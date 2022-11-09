@@ -7,7 +7,7 @@ package_name = 'cone_detection_python'
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name, 'cone_detection/utils', 'cone_detection/models'],
+    packages=[package_name, package_name + '/utils', package_name + '/models'],
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
@@ -23,7 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'camera_sub = cone_detection.camera_sub_node:main',
+            'camera_sub = cone_detection_python.camera_sub_node:main',
         ],
     },
 )
