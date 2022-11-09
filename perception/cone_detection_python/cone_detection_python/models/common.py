@@ -12,10 +12,10 @@ from torchvision.ops import DeformConv2d
 from PIL import Image
 from torch.cuda import amp
 
-from ..utils.datasets import letterbox
-from ..utils.general import non_max_suppression, make_divisible, scale_coords, increment_path, xyxy2xywh
-from ..utils.plots import color_list, plot_one_box
-from ..utils.torch_utils import time_synchronized
+from cone_detection_python.utils.datasets import letterbox
+from cone_detection_python.utils.general import non_max_suppression, make_divisible, scale_coords, increment_path, xyxy2xywh
+from cone_detection_python.utils.plots import color_list, plot_one_box
+from cone_detection_python.utils.torch_utils import time_synchronized
 
 
 ##### basic ####

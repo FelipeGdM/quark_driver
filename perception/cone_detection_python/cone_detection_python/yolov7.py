@@ -33,7 +33,7 @@ class Yolov7:
         # Load model
         self.model = attempt_load(self.weights, map_location=self.device)  # load FP32 model
         stride = int(self.model.stride.max())  # model stride
-        imgsz = check_img_size(imgsz, s=stride)  # check img_size
+        imgsz = check_img_size(self.img_size, s=stride)  # check img_size
 
         self.model = TracedModel(self.model, self.device, self.img_size)
 
@@ -52,7 +52,7 @@ class Yolov7:
     def detect(self, img):
         img = torch.from_numpy(img).to(self.device)
         img = img.half() if self.half else img.float()  # uint8 to fp16/32
-        img /= 255.0  # 0 - 255 to 0.0 - 1.0
+        img /= 255.0  # 0 - 255 to 0.0 - 1.0    
         if img.ndimension() == 3:
             img = img.unsqueeze(0)
 

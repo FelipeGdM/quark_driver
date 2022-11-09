@@ -8,11 +8,11 @@ logger = logging.getLogger(__name__)
 import torch
 from .common import *
 from .experimental import *
-from ..utils.autoanchor import check_anchor_order
-from ..utils.general import make_divisible, check_file, set_logging
-from ..utils.torch_utils import time_synchronized, fuse_conv_and_bn, model_info, scale_img, initialize_weights, \
+from cone_detection_python.utils.autoanchor import check_anchor_order
+from cone_detection_python.utils.general import make_divisible, check_file, set_logging
+from cone_detection_python.utils.torch_utils import time_synchronized, fuse_conv_and_bn, model_info, scale_img, initialize_weights, \
     select_device, copy_attr
-from ..utils.loss import SigmoidBin
+from cone_detection_python.utils.loss import SigmoidBin
 
 try:
     import thop  # for FLOPS computation
