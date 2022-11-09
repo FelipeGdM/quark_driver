@@ -45,8 +45,6 @@ int main(int argc, char * argv[])
     msg = cv_bridge::CvImage(std_msgs::msg::Header(), sensor_msgs::image_encodings::BGR8, image).toImageMsg();
     pub.publish(msg);
     
-    imshow("Webcam", image);
-    waitKey(1);
 
     rclcpp::spin_some(node);
     rate.sleep();
