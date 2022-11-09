@@ -3,11 +3,13 @@ import time
 import torch
 import torch.backends.cudnn as cudnn
 from numpy import random
+import numpy as np
 
 from .models.experimental import attempt_load
 from .utils.general import check_img_size, non_max_suppression, scale_coords, set_logging
 from .utils.plots import plot_one_box
 from .utils.torch_utils import select_device, time_synchronized, TracedModel
+from .utils.datasets import letterbox
 
 class Yolov7:
     def __init__(self, weights_path, conf_thres, iou_thres, img_size, classes) -> None:
@@ -16,11 +18,6 @@ class Yolov7:
         self.iou_thres = iou_thres
         self.img_size = img_size
         self.classes = classes
-        # self.model
-        # self.half
-        # self.device
-        # self.names
-        # self.colors
 
         self.startup()
 
@@ -30,12 +27,21 @@ class Yolov7:
         self.device = select_device('0')
         self.half = self.device.type != 'cpu'  # half precision only supported on CUDA
 
+        # self.webcam = self.source.isnumeric() or self.source.endswith('.txt') or self.source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
+        self.webcam = True
+
         # Load model
         self.model = attempt_load(self.weights, map_location=self.device)  # load FP32 model
-        stride = int(self.model.stride.max())  # model stride
-        imgsz = check_img_size(self.img_size, s=stride)  # check img_size
+        self.stride = int(self.model.stride.max())  # model stride
+        imgsz = check_img_size(self.img_size, s=self.stride)  # check img_size
+
+        self.old_img_w = self.old_img_h = imgsz
+        self.old_img_b = 1
 
         self.model = TracedModel(self.model, self.device, self.img_size)
+
+        if(self.half):
+            self.model.half()
 
         cudnn.benchmark = True  # set True to speed up constant image size inference
 
@@ -49,20 +55,30 @@ class Yolov7:
 
         t0 = time.time()
 
-    def detect(self, img):
+    def detect(self, imgs):
+        img0 = imgs.copy()
+
+        # Letterbox
+        img = [letterbox(x, self.img_size, auto=True, stride=self.stride)[0] for x in img0]
+        print(f'Shape img: {np.shape(img)}, img0: {np.shape(img0)}')
+        # Stack
+        img = np.stack(img, 0)
+
+        # Convert
+        img = img[:, :, :, ::-1].transpose(0, 3, 1, 2)  # BGR to RGB, to bsx3x416x416
+        img = np.ascontiguousarray(img)
+
         img = torch.from_numpy(img).to(self.device)
         img = img.half() if self.half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0    
         if img.ndimension() == 3:
             img = img.unsqueeze(0)
 
-        im0 = img.copy()
-
         # Warmup
-        if self.device.type != 'cpu' and (old_img_b != img.shape[0] or old_img_h != img.shape[2] or old_img_w != img.shape[3]):
-            old_img_b = img.shape[0]
-            old_img_h = img.shape[2]
-            old_img_w = img.shape[3]
+        if self.device.type != 'cpu' and (self.old_img_b != img.shape[0] or self.old_img_h != img.shape[2] or self.old_img_w != img.shape[3]):
+            self.old_img_b = img.shape[0]
+            self.old_img_h = img.shape[2]
+            self.old_img_w = img.shape[3]
             for i in range(3):
                 self.model(img)[0]
 
@@ -78,9 +94,9 @@ class Yolov7:
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             if self.webcam:  # batch_size >= 1
-                s, im0 = '%g: ' % i, im0[i].copy()
+                s, im0 = '%g: ' % i, img0[i].copy()
             else:
-                s, im0 = '', im0
+                s, im0 = '', img0
 
             if len(det):
                 # Rescale boxes from img_size to im0 size
