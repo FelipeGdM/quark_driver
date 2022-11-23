@@ -24,3 +24,9 @@
 	path = vesc
 	url = http://github.com/f1tenth/vesc.git
 	branch = ros2
+[submodule "imx219_83_jetson_driver"]
+	path = imx219_83_jetson_driver
+	url = https://github.com/FelipeGdM/imx219_83_jetson_driver.git
+[submodule "opencv_cam"]
+	path = opencv_cam
+	url = https://github.com/clydemcqueen/opencv_cam.git
