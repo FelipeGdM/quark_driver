@@ -90,6 +90,7 @@ class Yolov7:
         # Apply NMS
         pred = non_max_suppression(pred, self.conf_thres, self.iou_thres, classes=self.classes)
         t3 = time_synchronized()
+        centers = []
 
         # Process detections
         for i, det in enumerate(pred):  # detections per image
@@ -109,10 +110,11 @@ class Yolov7:
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
+                    centers.append(xyxy)
                     label = f'{self.names[int(cls)]} {conf:.2f}'
                     plot_one_box(xyxy, im0, label=label, color=self.colors[int(cls)], line_thickness=1)
 
             # Print time (inference + NMS)
             print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
         
-        return im0
+        return im0, centers
