@@ -1,0 +1,15 @@
+launch:
+  - group:
+    - push-ros-namespace:
+        namespace: "/camera"
+    - node:
+        pkg: "imx219_83_jetson_driver"
+        exec: "camera_node"
+        name: "left_camera"
+        namespace: "left"
+        respawn: "True"
+        param:
+          - name: left_camera_id
+            value: /dev/stereo_camera/left/left
+          - name: right_camera_id
+            value: /dev/stereo_camera/left/right
