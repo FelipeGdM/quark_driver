@@ -251,10 +251,11 @@ def attempt_load(weights, map_location=None):
     model = Ensemble()
 
     # Pass the path to the folder with models folder, required to load .pt file
-    sys.path.insert(0, '/home/tocoquinho/repositories/ros2_ws/src/quark_driver/perception/cone_detection_python/cone_detection_python')
+    # sys.path.insert(0, '/home/tocoquinho/repositories/ros2_ws/src/quark_driver/perception/cone_detection_python/cone_detection_python')
+    sys.path.insert(0, '/home/quark/main_ws/src/quark_driver/perception/cone_detection_python/cone_detection_python')
 
     for w in weights if isinstance(weights, list) else [weights]:
-        attempt_download(w)
+        #attempt_download(w)
         ckpt = torch.load(w, map_location=map_location)  # load
         model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
     
