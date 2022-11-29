@@ -11,7 +11,8 @@ find_package(rclcpp REQUIRED)
 find_package(tf2 REQUIRED) 
 find_package(tf2_ros REQUIRED) 
 find_package(OpenCV REQUIRED)
-find_package(sensor_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED) 
+find_package(stereo_msgs REQUIRED) 
 find_package(geometry_msgs REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(cv_bridge REQUIRED)
@@ -27,10 +28,13 @@ include_directories(
 )
 
 add_executable(pose_estimator src/cone_pose_estimator.cpp)
-ament_target_dependencies(pose_estimator rclcpp tf2 tf2_ros sensor_msgs message_filters cv_bridge image_transport OpenCV geometry_msgs)
+ament_target_dependencies(pose_estimator rclcpp tf2 tf2_ros sensor_msgs message_filters cv_bridge image_transport OpenCV geometry_msgs stereo_msgs)
 
 install(TARGETS
   pose_estimator
   DESTINATION lib/${PROJECT_NAME})
 
-ament_package()
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
+)

@@ -1,0 +1,13 @@
+launch:
+  - group:
+    - node: 
+        pkg: "static_cameras_tf2"
+        exec: "tf2_publisher"
+        name: "cameras_tf2"
+        respawn: "False"
+
+    - node:
+        pkg: "cone_pose_estimator"
+        exec: "pose_estimator"
+        name: "pose_estimator"
+        respawn: "True"
