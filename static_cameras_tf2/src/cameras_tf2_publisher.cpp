@@ -10,16 +10,40 @@
 class StaticFramePublisher : public rclcpp::Node
 {
 public:
-    explicit StaticFramePublisher(std::string frameId, float* translation, tf2::Matrix3x3 rotationMatrix)
+    explicit StaticFramePublisher()
     : Node("tf2_publisher")
     {
         tf_static_broadcaster_ = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 
-        // Publish static transforms once at startup
-        this->make_transforms(frameId, translation, rotationMatrix);
+        //Front camera
+        rotationMatrix.setValue( 0, 0, 1,
+                                -1, 0, 0,
+                                0, -1, 0);
+        translation = new float[3] {0.09 , 0.03 , 0.137};
+        make_transforms("front_camera", translation, rotationMatrix);
+
+        //Left camera
+        rotationMatrix.setValue(1, 0, 0,
+                                0, 0, 1,
+                                0, -1, 0);
+        translation = new float[3] {-0.03, 0.08, 0.137};
+        make_transforms("left_camera", translation, rotationMatrix);
+
+        //Right camera
+        rotationMatrix.setValue(-1, 0, 0,
+                                0, 0, -1,
+                                0, -1, 0);
+        translation = new float[3] {0.03, -0.08, 0.137};
+        make_transforms("right_camera", translation, rotationMatrix);
+
+        //Back camera
+        rotationMatrix.setValue(0, 0, -1,
+                                1, 0, 0,
+                                0, -1, 0);
+        translation = new float[3] {-0.09, -0.03, 0.137};
+        make_transforms("back_camera", translation, rotationMatrix);
     }
 
-private:
     void make_transforms(std::string frameId, float* translation, tf2::Matrix3x3 rotationMatrix)
     {
         geometry_msgs::msg::TransformStamped t;
@@ -40,9 +64,12 @@ private:
         t.transform.rotation.w = q.w();
 
         tf_static_broadcaster_->sendTransform(t);
+        std::cout << "Published " << frameId << std::endl;
     }
 
     std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_static_broadcaster_;
+    tf2::Matrix3x3 rotationMatrix;
+    float* translation;
 };
 
 int main(int argc, char * argv[])
@@ -51,41 +78,8 @@ int main(int argc, char * argv[])
     rclcpp::init(argc, argv);
 
     std::cout << "Publishing cameras static transform" << std::endl;
-
-    tf2::Matrix3x3 rotationMatrix;
-    float* translation;
-
-    //Front camera
-    rotationMatrix.setValue( 0, 0, 1,
-                            -1, 0, 0,
-                             0, -1, 0);
-    translation = new float[3] {0.09 , 0.03 , 0};
-    std::make_shared<StaticFramePublisher>("front_camera", translation, rotationMatrix);
-    std::cout << "Published front" << std::endl;
-
-    //Left camera
-    rotationMatrix.setValue(1, 0, 0,
-                            0, 0, 1,
-                            0, -1, 0);
-    translation = new float[3] {-0.03, 0.08, 0};
-    std::make_shared<StaticFramePublisher>("left_camera", translation, rotationMatrix);
-    std::cout << "Published left" << std::endl;
-
-    //Right camera
-    rotationMatrix.setValue(-1, 0, 0,
-                            0, 0, -1,
-                            0, -1, 0);
-    translation = new float[3] {0.03, -0.08, 0};
-    std::make_shared<StaticFramePublisher>("right_camera", translation, rotationMatrix);
-    std::cout << "Published right" << std::endl;
-
-    //Back camera
-    rotationMatrix.setValue(0, 0, -1,
-                            1, 0, 0,
-                            0, -1, 0);
-    translation = new float[3] {-0.09, -0.03, 0};
-    std::make_shared<StaticFramePublisher>("back_camera", translation, rotationMatrix);
-    std::cout << "Published back" << std::endl;
+    
+    rclcpp::spin(std::make_shared<StaticFramePublisher>());
 
     std::cout << "Done publishing transforms" << std::endl;
 
