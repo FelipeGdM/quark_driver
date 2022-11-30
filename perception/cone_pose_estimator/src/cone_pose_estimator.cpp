@@ -11,13 +11,9 @@
 #include "sensor_msgs/msg/camera_info.hpp"
 #include "geometry_msgs/msg/pose_array.hpp"
 #include "geometry_msgs/msg/pose.hpp"
-#include "message_filters/subscriber.h"
-#include "message_filters/time_synchronizer.h"
-#include "message_filters/synchronizer.h"
-#include "message_filters/sync_policies/approximate_time.h"
 #include "image_transport/image_transport.hpp"
 #include "std_msgs/msg/header.hpp"
-#include "stereo_msgs/msg/disparity_image.hpp"
+#include <tf2_ros/transform_listener.h>
 
 using std::placeholders::_1;
 using std::placeholders::_2;
@@ -27,16 +23,7 @@ using std::placeholders::_4;
 using namespace std;
 using namespace cv;
 
-static sensor_msgs::msg::CameraInfo::SharedPtr left_cam_info;
-static sensor_msgs::msg::CameraInfo::SharedPtr front_cam_info;
-static sensor_msgs::msg::CameraInfo::SharedPtr right_cam_info;
-static sensor_msgs::msg::CameraInfo::SharedPtr back_cam_info;
-
 static geometry_msgs::msg::PoseArray::SharedPtr detections_msg;
-static stereo_msgs::msg::DisparityImage::SharedPtr left_img_msg;
-static stereo_msgs::msg::DisparityImage::SharedPtr front_img_msg;
-static stereo_msgs::msg::DisparityImage::SharedPtr right_img_msg;
-static stereo_msgs::msg::DisparityImage::SharedPtr back_img_msg;
 
 class ConePoseEstimator : public rclcpp::Node
 {
@@ -49,27 +36,11 @@ public:
     right_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_pose/right", 1); 
     back_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_pose/back", 1); 
 
-    left_cam_info_sub = this->create_subscription<sensor_msgs::msg::CameraInfo>("/stereo_camera/left/left/camera_info", 1, std::bind(&ConePoseEstimator::left_cam_info_callback, this, _1));
-    front_cam_info_sub = this->create_subscription<sensor_msgs::msg::CameraInfo>("/stereo_camera/front/left/camera_info", 1, std::bind(&ConePoseEstimator::front_cam_info_callback, this, _1));
-    right_cam_info_sub = this->create_subscription<sensor_msgs::msg::CameraInfo>("/stereo_camera/right/left/camera_info", 1, std::bind(&ConePoseEstimator::right_cam_info_callback, this, _1));
-    back_cam_info_sub = this->create_subscription<sensor_msgs::msg::CameraInfo>("/stereo_camera/back/left/camera_info", 1, std::bind(&ConePoseEstimator::back_cam_info_callback, this, _1));
-
     detections_sub = this->create_subscription<geometry_msgs::msg::PoseArray>("/camera/cone_centers", 1, std::bind(&ConePoseEstimator::detections_callback, this, _1));
-    left_image_sub = this->create_subscription<stereo_msgs::msg::DisparityImage>("/stereo_camera/left/left/disparity", 1, std::bind(&ConePoseEstimator::left_img_callback, this, _1));
-    front_image_sub = this->create_subscription<stereo_msgs::msg::DisparityImage>("/stereo_camera/front/left/disparity", 1, std::bind(&ConePoseEstimator::front_img_callback, this, _1));
-    right_image_sub = this->create_subscription<stereo_msgs::msg::DisparityImage>("/stereo_camera/right/left/disparity", 1, std::bind(&ConePoseEstimator::right_img_callback, this, _1));
-    back_image_sub = this->create_subscription<stereo_msgs::msg::DisparityImage>("/stereo_camera/back/left/disparity", 1, std::bind(&ConePoseEstimator::back_img_callback, this, _1));
-  
+
     RCLCPP_INFO(this->get_logger(), "Ready to receive images and detections!!");
   }
 
-// Intrinsic camera matrix for the raw (distorted) images.
-//     [fx  0 cx]
-// K = [ 0 fy cy]
-//     [ 0  0  1]
-// Projects 3D points in the camera coordinate frame to 2D pixel
-// coordinates using the focal lengths (fx, fy) and principal point
-// (cx, cy).
 
   void spin(){
     if(  detections_msg != nullptr
@@ -86,23 +57,12 @@ public:
 
 private:
   void reset_msgs(){
-    left_img_msg = nullptr;
-    front_img_msg = nullptr;
-    right_img_msg = nullptr;
-    back_img_msg = nullptr;
     detections_msg = nullptr;
   }
 
   void estimate_poses()
   {
     RCLCPP_INFO(this->get_logger(), "I heard: bananas");
-    // auto front_img = cv_bridge::toCvShare(front_img_msg->image, front_img_msg, "8UC1");
-    // auto left_img = cv_bridge::toCvShare(left_img_msg->image, left_img_msg, "8UC1");
-    // auto right_img = cv_bridge::toCvShare(right_img_msg->image, right_img_msg, "8UC1");
-    // cv_bridge::CvImageConstPtr back_img = cv_bridge::toCvShare(back_img_msg->image, back_img_msg, "8UC1");
-
-    // int h = front_img->image.rows;
-    // int w = front_img->image.cols;
     int h = 480;
     int w = 640;
     
@@ -176,59 +136,17 @@ private:
     RCLCPP_INFO(this->get_logger(), "--------------------------------------");
   }
 
-  void left_cam_info_callback(const sensor_msgs::msg::CameraInfo::SharedPtr cam_info) const 
-  {
-    left_cam_info = cam_info;
-  }
-  void front_cam_info_callback(const sensor_msgs::msg::CameraInfo::SharedPtr cam_info) const 
-  {
-    front_cam_info = cam_info;
-  }
-  void right_cam_info_callback(const sensor_msgs::msg::CameraInfo::SharedPtr cam_info) const 
-  {
-    right_cam_info = cam_info;
-  }
-  void back_cam_info_callback(const sensor_msgs::msg::CameraInfo::SharedPtr cam_info) const 
-  {
-    back_cam_info = cam_info;
-  }
-
   void detections_callback(const geometry_msgs::msg::PoseArray::SharedPtr detections) const 
   {
     detections_msg = detections;
   }
-  void left_img_callback(const stereo_msgs::msg::DisparityImage::SharedPtr img) const 
-  {
-    left_img_msg = img;
-  }
-  void front_img_callback(const stereo_msgs::msg::DisparityImage::SharedPtr img) const 
-  {
-    front_img_msg = img;
-  }
-  void right_img_callback(const stereo_msgs::msg::DisparityImage::SharedPtr img) const 
-  {
-    right_img_msg = img;
-  }
-  void back_img_callback(const stereo_msgs::msg::DisparityImage::SharedPtr img) const 
-  {
-    back_img_msg = img;
-  }
 
-  rclcpp::Subscription<stereo_msgs::msg::DisparityImage>::SharedPtr left_image_sub;
-  rclcpp::Subscription<stereo_msgs::msg::DisparityImage>::SharedPtr right_image_sub;
-  rclcpp::Subscription<stereo_msgs::msg::DisparityImage>::SharedPtr front_image_sub;
-  rclcpp::Subscription<stereo_msgs::msg::DisparityImage>::SharedPtr back_image_sub;
   rclcpp::Subscription<geometry_msgs::msg::PoseArray>::SharedPtr detections_sub;
 
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr left_det_pub;
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr front_det_pub;
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr right_det_pub;
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr back_det_pub;
-
-  rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr left_cam_info_sub;
-  rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr front_cam_info_sub;
-  rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr right_cam_info_sub;
-  rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr back_cam_info_sub;
 };
 
 int main(int argc, char *argv[])
