@@ -10,10 +10,13 @@
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"
 #include "geometry_msgs/msg/pose_array.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/pose.hpp"
 #include "image_transport/image_transport.hpp"
 #include "std_msgs/msg/header.hpp"
 #include <tf2_ros/transform_listener.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 using std::placeholders::_1;
 using std::placeholders::_2;
@@ -29,12 +32,13 @@ class ConePoseEstimator : public rclcpp::Node
 {
 public:
   ConePoseEstimator()
-      : Node("cone_pose_estimator")
+      : Node("cone_pose_estimator"), buffer_(this->get_clock()), listener_(buffer_)
   {
-    left_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_pose/left", 1); 
-    front_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_pose/front", 1); 
-    right_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_pose/right", 1); 
-    back_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_pose/back", 1); 
+    left_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_poses/left", 1); 
+    front_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_poses/front", 1); 
+    right_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_poses/right", 1); 
+    back_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_poses/back", 1); 
+    base_link_det_pub = this->create_publisher<geometry_msgs::msg::PoseArray>("cone_poses/base_link/all", 1); 
 
     detections_sub = this->create_subscription<geometry_msgs::msg::PoseArray>("/camera/cone_centers", 1, std::bind(&ConePoseEstimator::detections_callback, this, _1));
 
@@ -76,11 +80,15 @@ private:
     geometry_msgs::msg::PoseArray right_detections;
     geometry_msgs::msg::PoseArray back_detections;
 
+    geometry_msgs::msg::PoseArray all_detections;
+
     for(geometry_msgs::msg::Pose pose: detections_msg->poses) {
       RCLCPP_INFO(this->get_logger(), "Pose");
       
-      int img_num = pose.position.x / w;
+      int image_row = pose.position.y / h;
+      int image_column = pose.position.x / w;
       pose.position.x = (float)((int)pose.position.x % (int)w);
+      pose.position.y = (float)((int)pose.position.y % (int)h);
 
       //align for Rviz visualization
       pose.orientation.w = 0.707;
@@ -94,27 +102,48 @@ private:
       pose.position.y = 0; //always on ground
       pose.position.z = z * gain + z_offset;
 
-      switch (img_num)
+      geometry_msgs::msg::PoseStamped pose_from_cam;
+      pose_from_cam.header.stamp = rclcpp::Node::now();
+      pose_from_cam.pose = pose;
+
+      switch (image_row)
       {
       case 0:
-        left_detections.poses.push_back(pose);
+        switch (image_column)
+        {
+          case 0:
+            pose_from_cam.header.frame_id = "left_camera";
+            left_detections.poses.push_back(pose);
+            break;
+
+          case 1:
+            pose_from_cam.header.frame_id = "front_camera";
+            front_detections.poses.push_back(pose);
+            break;
+        }
         break;
 
       case 1:
-        front_detections.poses.push_back(pose);
-        break;
-      
-      case 2:
-        right_detections.poses.push_back(pose);
-        break;
-      
-      case 3:
-        back_detections.poses.push_back(pose);
+        switch (image_column)
+        {
+          case 0:
+            pose_from_cam.header.frame_id = "right_camera";
+            right_detections.poses.push_back(pose);
+            break;
+          
+          case 1:
+            pose_from_cam.header.frame_id = "back_camera";
+            back_detections.poses.push_back(pose);
+            break;
+        }
         break;
       
       default:
         break;
       }
+
+      geometry_msgs::msg::PoseStamped pose_from_base = buffer_.transform(pose_from_cam, "base_link");
+      all_detections.poses.push_back(pose_from_base.pose);
     }
 
     left_detections.header.stamp = rclcpp::Node::now(); // timestamp of creation of the msg
@@ -133,6 +162,10 @@ private:
     back_detections.header.frame_id = "back_camera";
     back_det_pub->publish(back_detections);
 
+    all_detections.header.stamp = rclcpp::Node::now(); 
+    all_detections.header.frame_id = "base_link"; 
+    base_link_det_pub->publish(all_detections);
+
     RCLCPP_INFO(this->get_logger(), "--------------------------------------");
   }
 
@@ -147,6 +180,10 @@ private:
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr front_det_pub;
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr right_det_pub;
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr back_det_pub;
+  rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr base_link_det_pub;
+
+  tf2_ros::Buffer buffer_;
+  tf2_ros::TransformListener listener_;
 };
 
 int main(int argc, char *argv[])
