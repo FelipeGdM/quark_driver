@@ -110,7 +110,7 @@ class Yolov7:
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    centers.append(xyxy)
+                    centers.append((xyxy, conf))
                     label = f'{self.names[int(cls)]} {conf:.2f}'
                     plot_one_box(xyxy, im0, label=label, color=self.colors[int(cls)], line_thickness=1)
 
