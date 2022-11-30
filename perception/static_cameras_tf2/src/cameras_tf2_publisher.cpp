@@ -64,7 +64,7 @@ public:
         t.transform.rotation.w = q.w();
 
         tf_static_broadcaster_->sendTransform(t);
-        std::cout << "Published " << frameId << std::endl;
+        RCLCPP_INFO_STREAM(this->get_logger(), "Published " << frameId);
     }
 
     std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_static_broadcaster_;
