@@ -73,9 +73,9 @@ public:
 
   void spin(){
     if(  detections_msg != nullptr
-      && front_img_msg != nullptr 
-      && right_img_msg != nullptr 
-      && left_img_msg != nullptr 
+      // && front_img_msg != nullptr 
+      // && right_img_msg != nullptr 
+      // && left_img_msg != nullptr 
       // && back_img_msg != nullptr 
       ){
       estimate_poses();
@@ -96,13 +96,20 @@ private:
   void estimate_poses()
   {
     RCLCPP_INFO(this->get_logger(), "I heard: bananas");
-    auto front_img = cv_bridge::toCvShare(front_img_msg->image, front_img_msg, "8UC1");
-    auto left_img = cv_bridge::toCvShare(left_img_msg->image, left_img_msg, "8UC1");
-    auto right_img = cv_bridge::toCvShare(right_img_msg->image, right_img_msg, "8UC1");
+    // auto front_img = cv_bridge::toCvShare(front_img_msg->image, front_img_msg, "8UC1");
+    // auto left_img = cv_bridge::toCvShare(left_img_msg->image, left_img_msg, "8UC1");
+    // auto right_img = cv_bridge::toCvShare(right_img_msg->image, right_img_msg, "8UC1");
     // cv_bridge::CvImageConstPtr back_img = cv_bridge::toCvShare(back_img_msg->image, back_img_msg, "8UC1");
 
-    int h = front_img->image.rows;
-    int w = front_img->image.cols;
+    // int h = front_img->image.rows;
+    // int w = front_img->image.cols;
+    int h = 480;
+    int w = 640;
+    
+    float f = 280;
+    float cone_height = 0.07; //m
+    float z_offset = 0.035;
+    float gain = 3.157;
 
     geometry_msgs::msg::PoseArray left_detections;
     geometry_msgs::msg::PoseArray front_detections;
@@ -119,73 +126,30 @@ private:
       pose.orientation.w = 0.707;
       pose.orientation.z = -0.707;
 
-      int disp;
-      float z;
-      float cone_height = 0.07; //m
+      pose.position.x -= w/2;
+      pose.position.y -= h/2;
+
+      float z = (f * (cone_height/2))/ (pose.position.y);
+      pose.position.x = gain * (pose.position.x * z)/ (f);
+      pose.position.y = 0; //always on ground
+      pose.position.z = z * gain + z_offset;
+
       switch (img_num)
       {
       case 0:
-        if (left_cam_info == nullptr) {
-          RCUTILS_LOG_WARN("No left camera info, skipping conversion");
-          return;
-        }
-
-        // disp = left_img->image.at<int>(pose.position.x, pose.position.y);
-        z = 0.4;
-                disp = right_img->image.at<uint8_t>(pose.position.x, pose.position.y);
-        z = disp == 0 ? z = 5 : (right_img_msg->t * right_img_msg->f / (float)disp);
-        pose.position.x = (pose.position.x - left_cam_info->k[2]) * z/left_cam_info->k[0];
-        pose.position.y = ((pose.position.y - left_cam_info->k[5]) * z/left_cam_info->k[4]) + cone_height/2;
-        pose.position.z = z;
         left_detections.poses.push_back(pose);
         break;
 
       case 1:
-        if (front_cam_info == nullptr) {
-          RCUTILS_LOG_WARN("No front camera info, skipping conversion");
-          break;
-        }
-
-        // disp = front_img->image.at<int>(pose.position.x, pose.position.y);
-        z = 0.4;
-                disp = right_img->image.at<uint8_t>(pose.position.x, pose.position.y);
-        z = disp == 0 ? z = 5 : (right_img_msg->t * right_img_msg->f / (float)disp);
-        pose.position.x = (pose.position.x - front_cam_info->k[2]) * z/front_cam_info->k[0];
-        pose.position.y = ((pose.position.y - front_cam_info->k[5]) * z/front_cam_info->k[4]) + cone_height/2;
-        pose.position.z = z;
         front_detections.poses.push_back(pose);
         break;
       
       case 2:
-        if (right_cam_info == nullptr) {
-          RCUTILS_LOG_WARN("No right camera info, skipping conversion");
-          break;
-        }
-
-        cv::imshow("Disp", right_img->image);
-        cv::waitKey(1);
-
-        disp = right_img->image.at<uint8_t>(pose.position.x, pose.position.y);
-        z = disp == 0 ? z = 5 : (right_img_msg->t * right_img_msg->f / (float)disp);
-        // z = 0.4;
-        RCLCPP_INFO_STREAM(this->get_logger(), "z: " << z << " | disp: " << disp);
-
-        pose.position.x = (pose.position.x - right_cam_info->k[2]) * z/right_cam_info->k[0];
-        pose.position.y = ((pose.position.y - right_cam_info->k[5]) * z/right_cam_info->k[4]) + cone_height/2;
-        pose.position.z = z;
         right_detections.poses.push_back(pose);
         break;
       
       case 3:
-        if (back_cam_info == nullptr) {
-          RCUTILS_LOG_WARN("No back camera info, skipping conversion");
-          break;
-        }
-        // disp = back_img->image.at<int>(pose.position.x, pose.position.y);
-        // pose.position.x = (pose.position.x - back_cam_info->k[2]) * z/back_cam_info->k[0];
-        // pose.position.y = ((pose.position.y - back_cam_info->k[5]) * z/back_cam_info->k[4]) + cone_height/2;
-        // pose.position.z = z;
-        // back_detections.poses.push_back(pose);
+        back_detections.poses.push_back(pose);
         break;
       
       default:
