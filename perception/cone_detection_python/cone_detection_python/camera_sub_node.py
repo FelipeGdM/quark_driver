@@ -16,12 +16,12 @@ class ImageSubscriber(Node):
 
     def __init__(self):
         super().__init__('cone_detector')
-        self.subscription = self.create_subscription(Image, '/camera/front/left/image_raw', self.image_callback, qos_profile=qos_profile_sensor_data)
+        self.subscription = self.create_subscription(Image, '/stereo_camera/fused/image_raw', self.image_callback, qos_profile=qos_profile_sensor_data)
         self.detections_pub = self.create_publisher(Image, '/camera/detections', 1)
         self.cone_centers_pub = self.create_publisher(PoseArray, '/camera/cone_centers', 1)
         
         #self.yolov7 = Yolov7("/home/tocoquinho/repositories/ros2_ws/src/quark_driver/perception/cone_detection_python/params/tiny_cone_weights.pt", 0.4, 0.25, 480, None)
-        self.yolov7 = Yolov7("/home/quark/Documents/yolov7/230_epochs_tiny.pt", 0.6, 0.5, 480, None)
+        self.yolov7 = Yolov7("/home/quark/Documents/yolov7/400_epochs_tiny.pt", 0.4, 0.5, 1920, None)
         print("Ready to receive")
 
     def image_callback(self, msg):
@@ -30,6 +30,7 @@ class ImageSubscriber(Node):
         display_img, predictions = self.yolov7.detect([cv_image])
 
         centers = PoseArray()
+        centers.header = msg.header
         if len(predictions):
             for rects in predictions:
                 rect_center = Pose()
