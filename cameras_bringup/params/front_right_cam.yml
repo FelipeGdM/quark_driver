@@ -1,0 +1,4 @@
+/**:
+  ros__parameters:
+    index: 2
+    camera_frame_id: front_right_camera

@@ -1,0 +1,8 @@
+launch:
+  - group:
+    - node:
+        pkg: "imx219_83_jetson_driver"
+        exec: "camera_node"
+        name: "camera_driver"
+        namespace: "stereo_camera"
+        respawn: "True"
