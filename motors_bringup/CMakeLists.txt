@@ -7,6 +7,8 @@ endif()
 
 # find dependencies
 find_package(ament_cmake_auto REQUIRED)
+find_package(ds4_driver REQUIRED)
+find_package(rclcpp REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -22,6 +24,17 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+add_executable(ds4_to_vesc
+  src/ds4_to_vesc.cpp
+)
+
+ament_target_dependencies(ds4_to_vesc rclcpp ds4_driver)
+
+install(TARGETS
+  ds4_to_vesc
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_auto_package(
   INSTALL_TO_SHARE
