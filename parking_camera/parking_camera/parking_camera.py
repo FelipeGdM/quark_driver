@@ -17,6 +17,9 @@ from geometry_msgs.msg import PoseArray, Pose
 
 # https://nilesh0109.medium.com/camera-image-perspective-transformation-to-different-plane-using-opencv-5e389dd56527
 
+CAMERA = "front/left"
+
+SIZE = 1000
 
 def get_inverse_pespective(perspective_matrix: np.array) -> np.array:
     """
@@ -70,9 +73,9 @@ def get_inverse_pespective(perspective_matrix: np.array) -> np.array:
     # convert homogenous coordinates to cartesian coorndinates
     pts_src_cart = np.array([[x / w, y / w] for x, y, w in pts_src])
     pts_dst_cart = np.array([[0, 0],
-                            [0, 500], 
-                            [500, 0],
-                            [500, 500]])/2 + np.array([0, 500])
+                            [0, SIZE], 
+                            [SIZE, 0],
+                            [SIZE, SIZE]])/4 + np.array([0, SIZE*0.6])
 
     # find the 3x3 Homography Matrix for transforming image plane to floor plane
     H, status = cv2.findHomography(pts_src_cart, pts_dst_cart)
@@ -106,13 +109,13 @@ class ParkingCamera(Node):
         super().__init__("parking_camera")
         self.subscription_img = self.create_subscription(
             Image,
-            "/stereo_camera/right/left/image_raw",
+            f"/stereo_camera/{CAMERA}/image_rect",
             self.image_callback,
             qos_profile=qos_profile_sensor_data,
         )
         self.subscription_camera_info = self.create_subscription(
             CameraInfo,
-            "/stereo_camera/front/left/camera_info",
+            f"/stereo_camera/{CAMERA}/camera_info",
             self.camera_info_callback,
             qos_profile=qos_profile_sensor_data,
         )
@@ -139,7 +142,7 @@ class ParkingCamera(Node):
 
         cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
 
-        im_dst = cv2.warpPerspective(cv_image, self.H, (1000, 1000))
+        im_dst = cv2.warpPerspective(cv_image, self.H, (SIZE, SIZE))
         cv2.imshow("topster", im_dst)
         cv2.waitKey(1)
 
