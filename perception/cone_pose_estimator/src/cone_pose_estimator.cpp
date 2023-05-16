@@ -42,6 +42,8 @@ public:
 
     detections_sub = this->create_subscription<geometry_msgs::msg::PoseArray>("/camera/cone_centers", 1, std::bind(&ConePoseEstimator::detections_callback, this, _1));
 
+    dist_thresh = 0.05;
+
     RCLCPP_INFO(this->get_logger(), "Ready to receive images and detections!!");
   }
 
@@ -99,7 +101,7 @@ private:
 
       float z = (f * (cone_height/2))/ (pose.position.y);
       pose.position.x = gain * (pose.position.x * z)/ (f);
-      pose.position.y = 0; //always on ground
+      pose.position.y = 0.137; //always on ground
       pose.position.z = z * gain + z_offset;
 
       geometry_msgs::msg::PoseStamped pose_from_cam;
@@ -162,9 +164,33 @@ private:
     back_detections.header.frame_id = "back_camera";
     back_det_pub->publish(back_detections);
 
+    // bool found;
+    // for(auto old_pose: previous_all_detections.poses){
+    //   found = false;
+    //   for(int i = 0; i < size(all_detections.poses); i++){
+    //     auto new_pose = all_detections.poses[i];
+
+    //     float dist = sqrt(pow(old_pose.position.x - new_pose.position.x, 2) + pow(old_pose.position.y - new_pose.position.y, 2));
+        
+    //     if(dist <= dist_thresh){
+    //       all_detections.poses[i].position.x = (new_pose.position.x + old_pose.position.x)/2;
+    //       all_detections.poses[i].position.y = (new_pose.position.y + old_pose.position.y)/2;
+          
+    //       found = true;
+    //       break;
+    //     }
+    //   }
+
+    //   if (!found){
+    //     all_detections.poses.push_back(old_pose);
+    //   }
+    // }
+
     all_detections.header.stamp = rclcpp::Node::now(); 
     all_detections.header.frame_id = "base_link"; 
     base_link_det_pub->publish(all_detections);
+
+    previous_all_detections = all_detections;
 
     RCLCPP_INFO(this->get_logger(), "--------------------------------------");
   }
@@ -181,9 +207,12 @@ private:
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr right_det_pub;
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr back_det_pub;
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr base_link_det_pub;
+  geometry_msgs::msg::PoseArray previous_all_detections;
 
   tf2_ros::Buffer buffer_;
   tf2_ros::TransformListener listener_;
+
+  float dist_thresh;
 };
 
 int main(int argc, char *argv[])
