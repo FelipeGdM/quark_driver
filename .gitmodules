@@ -1,32 +1,29 @@
 [submodule "ackermann_msgs"]
-	path = ackermann_msgs
+	path = vendor/ackermann_msgs
 	url = https://github.com/ros-drivers/ackermann_msgs.git
 	branch = ros2
 [submodule "ds4_driver"]
-	path = ds4_driver
+	path = vendor/ds4_driver
 	url = https://github.com/naoki-mizuno/ds4_driver.git
 	branch = foxy-devel
 [submodule "teleop_tools"]
-	path = teleop_tools
+	path = vendor/teleop_tools
 	url = https://github.com/ros-teleop/teleop_tools.git
 	branch = foxy-devel
 [submodule "topic_tools"]
-	path = topic_tools
+	path = vendor/topic_tools
 	url = https://github.com/ros-tooling/topic_tools.git
 	branch = main
 [submodule "transport_drivers"]
-	path = transport_drivers
+	path = vendor/transport_drivers
 	url = https://github.com/ros-drivers/transport_drivers.git
 [submodule "udp_msgs"]
-	path = udp_msgs
+	path = vendor/udp_msgs
 	url = https://github.com/flynneva/udp_msgs.git
 [submodule "vesc"]
-	path = vesc
+	path = vendor/vesc
 	url = http://github.com/f1tenth/vesc.git
 	branch = ros2
-[submodule "imx219_83_jetson_driver"]
-	path = imx219_83_jetson_driver
-	url = https://github.com/FelipeGdM/imx219_83_jetson_driver.git
 [submodule "opencv_cam"]
-	path = opencv_cam
+	path = vendor/opencv_cam
 	url = https://github.com/clydemcqueen/opencv_cam.git
