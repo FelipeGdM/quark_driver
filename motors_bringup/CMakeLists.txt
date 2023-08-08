@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake_auto REQUIRED)
 find_package(ds4_driver REQUIRED)
+find_package(ds4_driver_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 # uncomment the following section in order to fill in
@@ -30,7 +31,7 @@ add_executable(ds4_to_vesc
   src/ds4_to_vesc.cpp
 )
 
-ament_target_dependencies(ds4_to_vesc rclcpp ds4_driver)
+ament_target_dependencies(ds4_to_vesc rclcpp std_msgs ds4_driver_msgs ds4_driver)
 
 install(TARGETS
   ds4_to_vesc

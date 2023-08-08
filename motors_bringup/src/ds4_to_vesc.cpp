@@ -7,7 +7,7 @@
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/float64.hpp"
 
-#include "ds4_driver/msg/status.hpp"
+#include "ds4_driver_msgs/msg/status.hpp"
 
 using namespace std::chrono_literals;
 
@@ -23,7 +23,7 @@ public:
   MinimalNode()
   : Node("minimal_node"), count_(0)
   {
-    ds4_subscription_ = this->create_subscription<ds4_driver::msg::Status>(
+    ds4_subscription_ = this->create_subscription<ds4_driver_msgs::msg::Status>(
       ds4_status_topic, 3, std::bind(&MinimalNode::subs_callback, this, _1));
 
     duty_cycle_publisher_ = this->create_publisher<std_msgs::msg::Float64>(
@@ -47,7 +47,7 @@ public:
   }
 
 private:
-  void subs_callback(const ds4_driver::msg::Status::SharedPtr msg)
+  void subs_callback(const ds4_driver_msgs::msg::Status::SharedPtr msg)
   {
     auto duty_cycle_msg = std_msgs::msg::Float64();
     auto servo_position_msg = std_msgs::msg::Float64();
@@ -70,7 +70,7 @@ private:
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr duty_cycle_publisher_;
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr servo_position_publisher_;
 
-  rclcpp::Subscription<ds4_driver::msg::Status>::SharedPtr ds4_subscription_;
+  rclcpp::Subscription<ds4_driver_msgs::msg::Status>::SharedPtr ds4_subscription_;
 
   size_t count_;
   bool disable_servo_control;
