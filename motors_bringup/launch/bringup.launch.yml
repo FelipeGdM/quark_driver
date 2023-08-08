@@ -2,12 +2,20 @@
 launch:
   - group:
     - push-ros-namespace:
-        namespace: "/vesc"
+        namespace: /vesc
+    - node:
+        pkg: vesc_driver
+        exec: vesc_driver_node
+        name: vesc_driver_node
+        namespace: vesc
+        respawn: True
+        param: 
+            - from: $(find-pkg-share motors_bringup)/params/vesc_config.yml
     - include:
-        file: "$(find-pkg-share vesc_driver)/launch/vesc_driver_node.launch.py"
+        file: $(find-pkg-share vesc_driver)/launch/vesc_driver_node.launch.py
         arg:
-          - name: duty_cycle_max
-            value: 0.9
+          - name: params
+            value: $(find-pkg-share motors_bringup)/params/vesc_config.yml
 
   - node:
     pkg: "key_teleop"
