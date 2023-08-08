@@ -27,3 +27,6 @@
 [submodule "opencv_cam"]
 	path = vendor/opencv_cam
 	url = https://github.com/clydemcqueen/opencv_cam.git
+[submodule "vendor/depthai-ros"]
+	path = vendor/depthai-ros
+	url = https://github.com/luxonis/depthai-ros.git
