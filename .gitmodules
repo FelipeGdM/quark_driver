@@ -30,3 +30,7 @@
 [submodule "vendor/depthai-ros"]
 	path = vendor/depthai-ros
 	url = https://github.com/luxonis/depthai-ros.git
+[submodule "vendor/xacro"]
+	path = vendor/xacro
+	url = https://github.com/ros/xacro.git
+	branch = ros2
