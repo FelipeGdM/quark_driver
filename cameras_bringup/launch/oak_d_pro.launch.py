@@ -35,6 +35,19 @@ def launch_setup(context, *args, **kwargs):
                                "use_rviz": LaunchConfiguration("use_rviz")
                                }.items()),
 
+        # LoadComposableNodes(
+        #     condition=IfCondition(LaunchConfiguration("pub_inverted")),
+        #     target_container=name+"_container",
+        #     composable_node_descriptions=[
+        #             ComposableNode(
+        #                 package="image_rotate",
+        #                 plugin="image_rotate::ImageRotateNode",
+        #                 name="rotation_node",
+        #                 remappings=[('image', name+'/rgb/image_raw'),
+        #                             ('camera_info', name+'/rgb/camera_info'),
+        #                             ('rotated/image', name+'/rgb/rotated/image')]
+        #             )
+        #     ]),
         LoadComposableNodes(
             condition=IfCondition(LaunchConfiguration("rectify_rgb")),
             target_container=name+"_container",
@@ -82,6 +95,7 @@ def generate_launch_description():
         DeclareLaunchArgument("params_file", default_value=os.path.join(package_prefix, 'config', 'rgbd.yml')),
         DeclareLaunchArgument("use_rviz", default_value="False"),
         DeclareLaunchArgument("rectify_rgb", default_value="False"),
+        DeclareLaunchArgument("pub_inverted", default_value="True"),
     ]
 
     return LaunchDescription(

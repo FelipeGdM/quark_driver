@@ -7,8 +7,8 @@
       i_ip: ''
       i_laser_dot_brightness: 0
       i_mx_id: ''
-      i_nn_type: spatial
-      i_pipeline_type: RGBD
+      i_nn_type: none
+      i_pipeline_type: quark_oak_pipelines::MyPipeline
       i_usb_port_id: ''
       i_usb_speed: SUPER_PLUS
       i_pipeline_dump: false
