@@ -34,3 +34,6 @@
 	path = vendor/xacro
 	url = https://github.com/ros/xacro.git
 	branch = ros2
+[submodule "vendor/nvidia/isaac_ros_image_pipeline"]
+	path = vendor/nvidia/isaac_ros_image_pipeline
+	url = https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_image_pipeline.git
