@@ -1,0 +1,51 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/quark/Workspaces/main_ws/install/quark_oak_pipelines/include/**",
+        "/home/quark/Workspaces/main_ws/install/depthai_ros_driver/include/**",
+        "/home/quark/Workspaces/main_ws/install/depthai_bridge/include/**",
+        "/home/quark/Workspaces/main_ws/install/vesc_driver/include/**",
+        "/home/quark/Workspaces/main_ws/install/vesc_ackermann/include/**",
+        "/home/quark/Workspaces/main_ws/install/vesc_msgs/include/**",
+        "/home/quark/Workspaces/main_ws/install/udp_driver/include/**",
+        "/home/quark/Workspaces/main_ws/install/serial_driver/include/**",
+        "/home/quark/Workspaces/main_ws/install/io_context/include/**",
+        "/home/quark/Workspaces/main_ws/install/udp_msgs/include/**",
+        "/home/quark/Workspaces/main_ws/install/topic_tools/include/**",
+        "/home/quark/Workspaces/main_ws/install/topic_tools_interfaces/include/**",
+        "/home/quark/Workspaces/main_ws/install/teleop_tools_msgs/include/**",
+        "/home/quark/Workspaces/main_ws/install/ds4_driver_msgs/include/**",
+        "/home/quark/Workspaces/main_ws/install/depthai_ros_msgs/include/**",
+        "/home/quark/Workspaces/main_ws/install/depthai_filters/include/**",
+        "/home/quark/Workspaces/main_ws/install/ackermann_msgs/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/perception/camera_publisher/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/quark_oak_pipelines/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/depthai-ros/depthai_bridge/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/depthai-ros/depthai_filters/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/depthai-ros/depthai_ros_driver/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/nvidia/isaac_ros_image_pipeline/isaac_ros_image_proc/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/nvidia/isaac_ros_image_pipeline/isaac_ros_stereo_image_proc/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/opencv_cam/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/topic_tools/topic_tools/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/transport_drivers/io_context/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/transport_drivers/serial_driver/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/transport_drivers/udp_driver/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/vesc/vesc_ackermann/include/**",
+        "/home/quark/Workspaces/main_ws/src/quark_driver/vendor/vesc/vesc_driver/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-arm64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

@@ -33,14 +33,14 @@ launch:
         param: 
             - from: "$(find-pkg-share motors_bringup)/params/vesc_config.yml"
 
-    # - node:
-    #     pkg: "motors_bringup"
-    #     exec: "ds4_to_vesc"
-    #     name: "ds4_to_vesc"
-    #     respawn: 'True'
-    #     param:
-    #         - name: disable_servo_control
-    #           value: true
+    - node:
+        pkg: "motors_bringup"
+        exec: "ds4_to_vesc"
+        name: "ds4_to_vesc"
+        respawn: 'True'
+        param:
+            - name: disable_servo_control
+              value: false
 
     # - node:
     #     pkg: "topic_tools"

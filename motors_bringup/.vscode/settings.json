@@ -1,0 +1,40 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/quark/Workspaces/main_ws/install/depthai_ros_driver/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/xacro/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/vesc_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/udp_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/topic_tools/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/topic_tools_interfaces/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/joy_teleop/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/teleop_tools_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/parking_camera/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/mouse_teleop/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/key_teleop/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/ds4_driver/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/ds4_driver_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/depthai_ros_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/cone_detection_python/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/ackermann_msgs/lib/python3.9/site-packages",
+        "/opt/ros/humble/lib/python3.8/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/quark/Workspaces/main_ws/install/depthai_ros_driver/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/xacro/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/vesc_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/udp_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/topic_tools/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/topic_tools_interfaces/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/joy_teleop/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/teleop_tools_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/parking_camera/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/mouse_teleop/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/key_teleop/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/ds4_driver/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/ds4_driver_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/depthai_ros_msgs/lib/python3.9/site-packages",
+        "/home/quark/Workspaces/main_ws/install/cone_detection_python/lib/python3.8/site-packages",
+        "/home/quark/Workspaces/main_ws/install/ackermann_msgs/lib/python3.9/site-packages",
+        "/opt/ros/humble/lib/python3.8/site-packages"
+    ]
+}
