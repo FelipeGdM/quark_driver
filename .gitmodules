@@ -34,3 +34,15 @@
 	path = vendor/xacro
 	url = https://github.com/ros/xacro.git
 	branch = ros2
+[submodule "vendor/vision_msgs"]
+	path = vendor/vision_msgs
+	url = https://github.com/ros-perception/vision_msgs.git
+[submodule "vendor/vision_opencv"]
+	path = vendor/vision_opencv
+	url = https://github.com/ros-perception/vision_opencv.git
+[submodule "vendor/ros2_shared"]
+	path = vendor/ros2_shared
+	url = https://github.com/ptrmu/ros2_shared.git
+[submodule "vendor/rviz"]
+	path = vendor/rviz
+	url = https://github.com/ros2/rviz.git
