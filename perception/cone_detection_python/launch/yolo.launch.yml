@@ -1,7 +1,0 @@
-launch:
-  - node:
-      pkg: "cone_detection_python"
-      exec: "camera_sub"
-      name: "camera_sub"
-      # namespace: "yolo"
-      output: "screen"
