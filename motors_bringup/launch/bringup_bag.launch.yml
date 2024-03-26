@@ -1,6 +1,0 @@
-launch:
-  - include:
-      file: "$(find-pkg-share motors_bringup)/launch/bringup_ds4.launch.yml"
-
-  - include:
-      file: "$(find-pkg-share cameras_bringup)/launch/bringup.launch.yml"

@@ -1,0 +1,6 @@
+launch:
+  - include:
+      file: "$(find-pkg-share quark_motor_bringup)/launch/bringup_ds4.launch.yml"
+
+  - include:
+      file: "$(find-pkg-share quark_camera_bringup)/launch/bringup.launch.yml"

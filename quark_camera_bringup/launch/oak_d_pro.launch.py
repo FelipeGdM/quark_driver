@@ -82,7 +82,7 @@ def launch_setup(context, *args, **kwargs):
 
 
 def generate_launch_description():
-    package_prefix = get_package_share_directory("cameras_bringup")
+    package_prefix = get_package_share_directory("quark_camera_bringup")
     declared_arguments = [
         DeclareLaunchArgument("name", default_value="oak"),
         DeclareLaunchArgument("parent_frame", default_value="oak-d-base-frame"),

@@ -31,10 +31,10 @@ launch:
         namespace: "vesc"
         respawn: "True"
         param: 
-            - from: "$(find-pkg-share motors_bringup)/params/vesc_config.yml"
+            - from: "$(find-pkg-share quark_motor_bringup)/params/vesc_config.yml"
 
     - node:
-        pkg: "motors_bringup"
+        pkg: "quark_motor_bringup"
         exec: "ds4_to_vesc"
         name: "ds4_to_vesc"
         respawn: 'True'

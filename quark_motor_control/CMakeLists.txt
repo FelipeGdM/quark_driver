@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(control)
+project(quark_motor_control)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)

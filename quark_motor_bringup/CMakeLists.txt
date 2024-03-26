@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(cameras_bringup)
+project(quark_motor_bringup)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -7,6 +7,10 @@ endif()
 
 # find dependencies
 find_package(ament_cmake_auto REQUIRED)
+find_package(ds4_driver REQUIRED)
+find_package(ds4_driver_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -23,9 +27,20 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+add_executable(ds4_to_vesc
+  src/ds4_to_vesc.cpp
+)
+
+ament_target_dependencies(ds4_to_vesc rclcpp std_msgs ds4_driver_msgs ds4_driver)
+
+install(TARGETS
+  ds4_to_vesc
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_auto_package(
   INSTALL_TO_SHARE
     launch
-    config
     params
 )
+
