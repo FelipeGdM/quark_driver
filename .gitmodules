@@ -46,3 +46,9 @@
 [submodule "vendor/rviz"]
 	path = vendor/rviz
 	url = https://github.com/ros2/rviz.git
+[submodule "vendor/point_cloud_transport"]
+	path = vendor/point_cloud_transport
+	url = https://github.com/ros-perception/point_cloud_transport.git
+[submodule "vendor/gz_math6_vendor"]
+	path = vendor/gz_math6_vendor
+	url = https://github.com/gazebo-release/gz_math6_vendor.git
