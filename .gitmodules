@@ -55,3 +55,15 @@
 [submodule "vendor/diagnostics"]
 	path = vendor/diagnostics
 	url = https://github.com/ros/diagnostics.git
+[submodule "vendor/gz_cmake2_vendor"]
+	path = vendor/gz_cmake2_vendor
+	url = https://github.com/gazebo-release/gz_cmake2_vendor.git
+[submodule "vendor/control_msgs"]
+	path = vendor/control_msgs
+	url = https://github.com/ros-controls/control_msgs.git
+[submodule "vendor/imu_tools"]
+	path = vendor/imu_tools
+	url = https://github.com/CCNYRoboticsLab/imu_tools.git
+[submodule "vendor/schemas"]
+	path = vendor/schemas
+	url = https://github.com/foxglove/schemas.git
